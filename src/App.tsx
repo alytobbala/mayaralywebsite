@@ -26,6 +26,12 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    // Reset any zoom or transform effects on page load
+    document.body.style.transform = "none";
+    document.body.style.zoom = "1";
+  }, []);
+
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (password === CORRECT_PASSWORD) {
