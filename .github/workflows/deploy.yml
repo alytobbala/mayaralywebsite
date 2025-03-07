@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions: 
+  contents: write  # This allows GitHub Actions to push changes
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -12,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          persist-credentials: false  # Prevents conflicts with GitHub Actions token
+          persist-credentials: false  # Ensures manual authentication
 
       - uses: actions/setup-node@v3
         with:
