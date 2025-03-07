@@ -64,33 +64,35 @@ function App() {
     <div className={`App ${isFadingIn ? "fade-in" : ""}`}>
       <CursorEffect />
       <header className="header">
-        <h1>Welcome to Our Wedding Website</h1>
+        <h1 style={{ color: "black" }}>Welcome to Our Wedding Website</h1>
         <FlipCountdown />
       </header>
-      <section className="how-it-started">
-        <div className="background-image">
-          <div className="overlay">
-            <h2>How It All Started</h2>
-            <p style={{ color: "white", backgroundColor: "#00000050" }}>
-              School - the place where we met, where we laughed, where we cried,
-              and where we fell in love. Our journey began in the classroom, but
-              our love story has no end.
-            </p>
+      <div style={{ backgroundColor: "#f2f2f2" }}>
+        <section className="how-it-started">
+          <div className="background-image">
+            <div className="overlay">
+              <h2>How It All Started</h2>
+              <p style={{ color: "white", backgroundColor: "#00000050" }}>
+                School - the place where we met, where we laughed, where we
+                cried, and where we fell in love. Our journey began in the
+                classroom, but our love story has no end.
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
-      <section className="wedding-vows">
-        <h2>My Wedding Vow to You</h2>
-        <p>
-          My dearest Mayoora, from the moment I met you, my heart has been
-          filled with love and joy. Today, I vow to be by your side, to support
-          and cherish you, through every challenge and every victory.
-        </p>
-      </section>
-      <Timeline /> {/* Add the timeline component here */}
-      <GalleryCarousel />
-      <footer className="footer">
-        <h2>Made with love - Save the Date</h2>
+        </section>
+        <section className="wedding-vows">
+          <h2>My Wedding Vow to You</h2>
+          <p>
+            My dearest Mayoora, from the moment I met you, my heart has been
+            filled with love and joy. Today, I vow to be by your side, to
+            support and cherish you, through every challenge and every victory.
+          </p>
+        </section>
+        <Timeline /> {/* Add the timeline component here */}
+        <GalleryCarousel />
+      </div>
+      <footer style={{ backgroundColor: "#f2f2f2" }} className="footer">
+        <h2 style={{ marginTop: "0px" }}>Made with love - Save the Date</h2>
         <CountdownTimer />
       </footer>
     </div>
