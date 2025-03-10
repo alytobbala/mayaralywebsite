@@ -1,106 +1,178 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import "./App.css";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import GalleryCarousel from "./components/GalleryCarousel";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import CursorEffect from "./components/CursorEffect";
-import CountdownTimer from "./components/CountdownTimer";
 import FlipCountdown from "./components/FlipCountdown";
-import WeddingDetails from "./components/WeddingDetails";
-import { FaLock, FaLockOpen } from "react-icons/fa"; // Import lock icons
-import Timeline from "./components/Timeline"; // Import the Timeline Component
+import Lenis from "lenis";
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import ThreeJSModel from "./components/ThreeJSModel";
+import GalleryCarousel from "./components/GalleryCarousel";
+import PhotoTimeline from "./components/PhotoTimeline";
 
-const CORRECT_PASSWORD = "ourwedding2025"; // Change this to your password
+gsap.registerPlugin(ScrollTrigger);
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState("");
-  const [isUnlocking, setIsUnlocking] = useState(false); // Track unlock animation
-  const [isFadingIn, setIsFadingIn] = useState(false); // Track fade-in effect
+  const lenis = new Lenis();
 
   useEffect(() => {
-    const storedAuth = localStorage.getItem("weddingAccess");
-    if (storedAuth === "true") {
-      setIsAuthenticated(true);
-      setIsFadingIn(true); // If authenticated already, fade in immediately
-    }
+    // Text scaling animation
+    gsap.to("h2", {
+      scale: 12000,
+      x: "90000%",
+      y: "200000%",
+      ease: "power1.inOut",
+      scrollTrigger: {
+        trigger: ".containerVideo",
+        scrub: 2.5,
+        start: "top top",
+        end: "150% top",
+        invalidateOnRefresh: true,
+      },
+    });
+
+    gsap.from("video", {
+      scale: 1.5,
+    });
+
+    // Video fade-out animation (starts when .textSection reaches middle of viewport)
+    gsap.to("video", {
+      y: "-100vh",
+      opacity: 0,
+      ease: "power2.out",
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top 50%", // Starts fading out when top of textSection reaches the middle of the viewport
+        end: "top top", // Fully faded out when top of textSection reaches top of viewport
+        scrub: 1.5,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    // Fade video back in smoothly when scrolling up
+    gsap.to("video", {
+      opacity: 1,
+      y: "-100",
+      ease: "power2.inOut",
+      scrollTrigger: {
+        trigger: ".hero",
+        start: "top 80%", // Starts bringing the video back earlier
+        end: "top 20%bottom%", // Ensures a smooth transition before text fully exits
+        scrub: 1.5,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    gsap.from("video", {
+      scale: 1.5,
+    });
+
+    lenis.on("scroll", ScrollTrigger.update);
+
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+
+    gsap.ticker.lagSmoothing(0);
+    //window.scrollTo(0, 0);
   }, []);
-
-  useEffect(() => {
-    // Reset any zoom or transform effects on page load
-    document.body.style.transform = "none";
-    document.body.style.zoom = "1";
-  }, []);
-
-  const handlePasswordSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === CORRECT_PASSWORD) {
-      setIsUnlocking(true); // Trigger unlock animation
-      setTimeout(() => {
-        setIsAuthenticated(true);
-        setIsFadingIn(true); // Trigger fade-in effect after unlocking
-        localStorage.setItem("weddingAccess", "true");
-      }, 1000); // Wait 1 second before fading in
-    } else {
-      alert("Incorrect password. Please try again!");
-    }
-  };
-
-  if (!isAuthenticated) {
-    return (
-      <div className="password-container">
-        <div className={`lock-icon ${isUnlocking ? "unlock" : ""}`}>
-          {isUnlocking ? <FaLockOpen size={50} /> : <FaLock size={50} />}
-        </div>
-        <h2>Enter Password to Access</h2>
-        <form onSubmit={handlePasswordSubmit}>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter Password"
-          />
-          <button type="submit">Unlock</button>
-        </form>
-      </div>
-    );
-  }
 
   return (
-    <div className={`App ${isFadingIn ? "fade-in" : ""}`}>
+    <div>
       <CursorEffect />
-      <header className="header">
-        <h1 style={{ color: "black" }}>Welcome to Our Wedding Website</h1>
-        <FlipCountdown />
-      </header>
-      <div style={{ backgroundColor: "#f2f2f2" }}>
-        <section className="how-it-started">
-          <div className="background-image">
-            <div className="overlay">
-              <h2>How It All Started</h2>
-              <p style={{ color: "white", backgroundColor: "#00000050" }}>
-                School - the place where we met, where we laughed, where we
-                cried, and where we fell in love. Our journey began in the
-                classroom, but our love story has no end.
-              </p>
+      <div className="containerVideo">
+        <video id="boomerangVideo" autoPlay loop muted>
+          <source
+            src="../public/images/austria/editedDance.mp4"
+            type="video/mp4"
+          />
+        </video>
+        <div className="maskWord">
+          <h2 style={{ textAlign: "center" }}>
+            To my One and Only, the girl I love the most
+          </h2>
+        </div>
+      </div>
+      <div className="textSection">
+        <section style={{ height: "300vh" }} className="hero">
+          {" "}
+          <br />
+          <h1>Hi love </h1>{" "}
+          <p style={{ width: "50%" }}>
+            I am not as talented as you are, you are one of the most talented
+            people I know, so I though I'd use my skills or what I know how to
+            do to express my love to you. I hope you like it.{" "}
+          </p>
+          <h1> I am probably your biggest fan</h1>
+          <div className="masonry">
+            <img src="../public/images/work/prints.png" alt="4" />
+            <img
+              src="../public/images/work/abgad.png"
+              style={{ height: "100.5%" }}
+              alt="1"
+            />
+            <img
+              src="../public/images/work/downtownAlex.gif"
+              className="wide"
+              alt="2"
+            />
+            <img
+              src="../public/images/work/ensembles.jfif"
+              alt="3"
+              className="wide"
+            />
+            <img
+              src="../public/images/work/tawagah.png"
+              alt="3"
+              className="wide"
+            />
+            <img
+              src="../public/images/work/gallery.png"
+              alt="3"
+              className="wide"
+            />
+          </div>
+          {/* Timeline Section - Fixes Placement */}
+          <div className="phototimeparent">
+            <h1>From the moment we first met ...</h1>
+            <h1>to the day we tie the knot ...</h1>
+            <h1>I have always known, you're the one</h1>
+            <div className="phototime">
+              <PhotoTimeline></PhotoTimeline>
             </div>
           </div>
         </section>
-        <section className="wedding-vows">
-          <h2>My Wedding Vow to You</h2>
-          <p>
-            My dearest Mayoora, from the moment I met you, my heart has been
-            filled with love and joy. Today, I vow to be by your side, to
-            support and cherish you, through every challenge and every victory.
-          </p>
-        </section>
-        <Timeline /> {/* Add the timeline component here */}
-        <GalleryCarousel />
       </div>
-      <footer style={{ backgroundColor: "#f2f2f2" }} className="footer">
-        <h2 style={{ marginTop: "0px" }}>Made with love - Save the Date</h2>
-        <CountdownTimer />
-      </footer>
+
+      <section className="info">
+        {" "}
+        <div className="tags">
+          <div className="gradient-bg">
+            <p>
+              Just like the soft olive green of a quiet forest and the warm
+              embrace of a sunset, your love colors my world in the most
+              beautiful pastel hues.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="scanner"></section>
+
+      <section className="outro">
+        <ThreeJSModel /> {/* This will display the 3D model */}
+      </section>
+
+      <section className="info">
+        {" "}
+        <div className="tags">
+          {" "}
+          <p>DAAAMNN</p>
+          <p>DAAAMNN</p>
+          <p>DAAAMNN</p>
+        </div>
+      </section>
     </div>
   );
 }

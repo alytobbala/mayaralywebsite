@@ -1,0 +1,31 @@
+.photo-timeline-container {
+    position: relative;
+    width: 100vw;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: rgba(255, 255, 255, 0.9);
+    white-space: nowrap; /* Prevent wrapping */
+  }
+  
+  .photo-timeline {
+    display: flex;
+    gap: 15px;
+    width: max-content; /* Allows images to flow continuously */
+    align-items: center;
+    white-space: nowrap; /* Prevent wrapping */
+  }
+  
+  .photo-timeline img {
+    width: 250px; /* Adjust size */
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .photo-timeline img:hover {
+    transform: scale(1.1);
+  }
+  
