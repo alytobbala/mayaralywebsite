@@ -1,4 +1,8 @@
 /* App.css */
+*{
+  color:black;
+}
+
 .containerVideo {
   min-height: 120vh;
   position: relative;
@@ -53,26 +57,12 @@ video {
   background: rgba(255, 255, 255, 0.9); /* Add slight background to be visible */
 }
 
- .info {
-  position: relative;
-  width: 100%;
-  min-height: 100vh; /* Ensure they take space */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 2rem;
-  font-size: 1.5rem;
-  color: black;
-  background: rgba(255, 255, 255, 0.9); /* Add slight background to be visible */
-  z-index: 1; /* Ensure text is above */
-}
 
 .scanner{
   position:absolute
 }
 
-.hero {
+.hero, .info {
   position: relative;
   width: 100%;
   min-height: 500px; /* Adjust height as needed */
@@ -84,7 +74,7 @@ video {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  z-index: 1;
+  z-index: 4;
 }
 
 /* Dark overlay */
@@ -163,7 +153,8 @@ section {
   width: 100%;
   height: 500px;
   overflow: hidden;
-  position: relative;
+  position: fixed;
+  z-index:3;
 }
 canvas {
   display: block;
@@ -199,7 +190,7 @@ canvas {
   gap: 10px;
   max-width: 600px;
   margin-top: 20px;
-  z-index: 3;
+  z-index: 4;
 }
 
 .masonry img {
@@ -250,3 +241,164 @@ canvas {
   margin-top: 40px;
   z-index: 5;
 }
+
+.masonryTwo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  max-width: 600px;
+  margin-top: 20px;
+  z-index: 3;
+}
+
+.masonryTwo img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
+}
+
+.masonryTwo .tall {
+  grid-row: span 2;
+}
+
+.masonryTwo .wide {
+  grid-column: span 2;
+}
+
+.masonryTwo img:hover {
+  transform: scale(1.05);
+}
+.wind-effect {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 0, 0, 0.5) 10%, rgba(255,255,255,0) 80%);
+  opacity: 1;
+  filter: blur(8px);
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  animation: swirl 3s linear infinite;
+  color:"red";
+  z-index: 1;
+}
+
+@keyframes swirl {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+.photo-stack-gallery {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.photo-stack {
+  position: relative;
+  width: 90%;
+  max-width: 800px;
+  height: 80vh;
+}
+
+/* 🔹 Flip Card Container */
+.flip-card {
+  position: absolute;
+  width: 200px;
+  height: 250px;
+  perspective: 1000px; /* Creates 3D depth */
+}
+
+/* 🔹 Inner Card with Flipping Animation */
+.flip-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.7s;
+}
+
+/* 🔹 Flip on Hover */
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* 🔹 Front & Back Styles */
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  backface-visibility: hidden; /* Hides the back by default */
+}
+
+/* 🔹 Front (Photo) */
+.flip-card-front {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flip-card-front img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 5px 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* 🔹 Back (Text) */
+.flip-card-back {
+  background: white;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: rotateY(180deg);
+  box-shadow: 5px 10px 30px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  padding: 15px;
+  font-size: 14px;
+  font-family: 'Courier New', Courier, monospace;
+  border-radius: 10px;
+}
+
+/* 🔹 Desktop Positions (Scattered Randomly) */
+@media (min-width: 768px) {
+  .photo1 { top: 10%; left: 8%; transform: rotate(-10deg); z-index: 2; }
+  .photo2 { top: 20%; left: 40%; transform: rotate(5deg); z-index: 2; }
+  .photo3 { top: 40%; left: 30%; transform: rotate(-15deg); z-index: 2; }
+  .photo4 { top: 60%; left: 10%; transform: rotate(7deg); z-index: 2; }
+  .photo5 { top: 70%; left: 60%; transform: rotate(-8deg); z-index: 2; }
+  .photo6 { top: 50%; left: 75%; transform: rotate(10deg); z-index: 2; }
+  .photo7 { top: 50%; left: 45%; transform: rotate(-5deg); z-index: 2; }
+  .photo8 { top: 80%; left: 35%; transform: rotate(12deg); z-index: 2; }
+  .photo9 { top: 10%; left: 65%; transform: rotate(-20deg); z-index: 1; }
+}
+
+/* 🔹 Mobile Optimization: Keep Scattered Look */
+@media (max-width: 767px) {
+  .flip-card {
+    width: 140px; /* Smaller images for mobile */
+    height: 180px;
+  }
+
+  .photo1 { top: 5%; left: 15%; transform: rotate(-7deg); z-index: 1; }
+  .photo2 { top: 5%; left: 70%; transform: rotate(6deg); z-index: 2; }
+  .photo3 { top: 25%; left: 0%; transform: rotate(-12deg); z-index: 5; }
+  .photo4 { top: 50%; left: 0%; transform: rotate(4deg); z-index: 6; }
+  .photo5 { top: 75%; left: 55%; transform: rotate(-6deg); z-index: 5; }
+  .photo6 { top: 45%; left: 75%; transform: rotate(9deg); z-index: 6; }
+  .photo7 { top: 50%; left: 38%; transform: rotate(-5deg); z-index: 7; }
+  .photo8 { top: 75%; left: 2%; transform: rotate(11deg); z-index: 8; }
+  .photo9 { top: 25%; left: 45%; transform: rotate(-25deg); z-index: 4; }
+}
+
