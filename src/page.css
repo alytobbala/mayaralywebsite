@@ -34,7 +34,7 @@
   
     justify-content: center;
   
-    mask-image: url("../public/images/austria/start.svg");
+    mask-image: url("/images/austria/start.svg");
   
     mask-position: center center;
   
