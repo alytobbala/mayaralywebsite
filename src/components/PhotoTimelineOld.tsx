@@ -3,18 +3,18 @@ import { gsap } from "gsap";
 import "./PhotoTimeline.css";
 
 const images = [
-  "../public/images/old/baack.jfif",
-  "../public/images/old/back.jfif",
-  "../public/images/old/back3.jfif",
-  "../public/images/old/back4.jfif",
-  "../public/images/old/baack.jfif",
-  "../public/images/old/back.jfif",
-  "../public/images/old/back3.jfif",
-  "../public/images/old/back4.jfif",
-  "../public/images/old/baack.jfif",
-  "../public/images/old/back.jfif",
-  "../public/images/old/back3.jfif",
-  "../public/images/old/back4.jfif",
+  "/images/old/baack.jfif",
+  "/images/old/back.jfif",
+  "/images/old/back3.jfif",
+  "/images/old/back4.jfif",
+  "/images/old/baack.jfif",
+  "/images/old/back.jfif",
+  "/images/old/back3.jfif",
+  "/images/old/back4.jfif",
+  "/images/old/baack.jfif",
+  "/images/old/back.jfif",
+  "/images/old/back3.jfif",
+  "/images/old/back4.jfif",
 ];
 
 const PhotoTimelineOld = () => {
