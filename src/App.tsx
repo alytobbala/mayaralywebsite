@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -10,13 +10,54 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import ThreeJSModel from "./components/ThreeJSModel";
 import GalleryCarousel from "./components/GalleryCarousel";
 import PhotoTimeline from "./components/PhotoTimeline";
+import PhotoTimelineTwo from "./components/PhotoTimelineOld";
+import WebARScene from "./components/WebARScene";
+import FirstMeetMap from "./components/FirstMeetMap";
 
 gsap.registerPlugin(ScrollTrigger);
 
 function App() {
   const lenis = new Lenis();
+  const audioRef: any = useRef(null); // Ref for the audio
+  const [audioAllowed, setAudioAllowed] = useState(true);
+  const [showAR, setShowAR] = useState(false);
 
   useEffect(() => {
+    const playAudio = () => {
+      if (audioAllowed && audioRef.current) {
+        audioRef.current.currentTime = 39; // Start at 39 seconds
+        audioRef.current.volume = 0; // Start muted
+
+        audioRef.current
+          .play()
+          .then(() => {
+            // 🟢 Ensure GSAP starts AFTER playback has begun
+            gsap.to(audioRef.current, {
+              volume: 0.3,
+              duration: 3,
+              ease: "power2.inOut",
+            });
+          })
+          .catch((err: any) => console.error("Audio play failed", err));
+
+        // 🔥 Fade out after 20 seconds
+        setTimeout(() => {
+          gsap.to(audioRef.current, {
+            volume: 0,
+            duration: 2,
+            ease: "power2.inOut",
+            onComplete: () => audioRef.current.pause(),
+          });
+        }, 20000);
+      }
+    };
+
+    const pauseAudio = () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+    };
     // Text scaling animation
     gsap.to("h2", {
       scale: 12000,
@@ -30,6 +71,7 @@ function App() {
         start: "top top",
         end: "150% top",
         invalidateOnRefresh: true,
+        onEnter: playAudio, // Play song when animation starts
       },
     });
 
@@ -90,8 +132,31 @@ function App() {
     //window.scrollTo(0, 0);
   }, []);
 
+  const enableAudio = () => {
+    setAudioAllowed(true);
+    if (audioRef.current) {
+      console.log("Playing audio");
+      audioRef.current
+        .play()
+        .catch((err: any) => console.error("Audio play failed", err));
+    }
+  };
+
   return (
     <div>
+      <audio
+        ref={audioRef}
+        src="https://archive.org/download/grover-washington-jr.-feat.-bill-withers-just-the-two-of-us-hq_202202/Grover%20Washington%20Jr.%20feat.%20Bill%20Withers%20-%20Just%20The%20Two%20of%20Us%20%5BHQ%5D.mp3"
+        preload="auto"
+      ></audio>
+      {!audioAllowed && (
+        <button
+          onClick={enableAudio}
+          style={{ position: "fixed", top: 20, right: 20, zIndex: 1000 }}
+        >
+          🔊 Enable Audio
+        </button>
+      )}
       <ThreeJSModel /> {/* This will display the 3D model */}
       <CursorEffect />
       <div className="containerVideo">
@@ -111,13 +176,7 @@ function App() {
         <section style={{ height: "300vh" }} className="hero">
           {" "}
           <br />
-          <h1 style={{ color: "black" }}>Hi love </h1>{" "}
-          <p style={{ width: "50%", color: "black" }}>
-            I am not as talented as you are, you are one of the most talented
-            people I know, so I though I'd use my skills or what I know how to
-            do to express my love to you. I hope you like it.{" "}
-          </p>
-          <h1 style={{ color: "black" }}> I am probably your biggest fan</h1>
+          <h1 style={{ color: "black" }}> From your biggest fan</h1>
           <div className="masonry">
             <img src="../public/images/work/prints.png" alt="4" />
             <img
@@ -148,11 +207,10 @@ function App() {
           </div>
         </section>
       </div>
-      <section style={{ height: "150vh" }} className="info">
+      <section style={{ height: "100vh" }} className="info">
         {" "}
         <h1 style={{ color: "black", width: "90%" }}>
-          {" "}
-          Maybe, you arent here yet, but I have you around me me all the time
+          Maybe, you arent here yet, but I have you around me all the time
         </h1>
         <div className="photo-stack">
           <div className="flip-card photo1">
@@ -268,17 +326,68 @@ function App() {
         <div className="tags">
           {" "}
           <p>DAAAMNN</p>
-          <p>DAAAMNN</p>
-          <p>DAAAMNN</p>
         </div>
         {/* Timeline Section - Fixes Placement */}
         <div className="phototimeparent">
-          <h1>From the moment we first met ...</h1>
-          <h1>to the day we tie the knot ...</h1>
-          <h1>I have always known, you're the one</h1>
+          <h1>We went from this</h1>
+          <div className="phototime">
+            <PhotoTimelineTwo></PhotoTimelineTwo>
+          </div>
+          <h1>To this</h1>
           <div className="phototime">
             <PhotoTimeline></PhotoTimeline>
           </div>
+        </div>
+      </section>
+      <section className="mapReveal">
+        <FirstMeetMap />
+        <div
+          style={{
+            position: "absolute",
+            bottom: "5%",
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: "rgba(255,255,255,0.8)",
+            padding: "1.5rem",
+            borderRadius: "15px",
+            width: "85%",
+            boxShadow: "0px 0px 10px rgba(0,0,0,0.1)",
+            maxHeight: "30vh",
+            overflowY: "auto",
+          }}
+        >
+          <p
+            style={{
+              fontSize: "1.2rem",
+              color: "#222",
+              textAlign: "center",
+              fontStyle: "italic",
+            }}
+          >
+            I’ll never forget the way you looked at me when I told you I see a
+            future with you. The surge of different feelings that showed on your
+            face. It turns out, that decision, on that day, was probably the
+            best decision I’ve ever made. I can’t imagine my life without you.
+            You are my everything, and I am so grateful for every moment we
+            share. I love you more than words can express.
+          </p>
+        </div>
+      </section>
+      <section>
+        <div
+          style={{
+            backgroundColor: "#FFFFFF80",
+            borderRadius: "20px",
+            textAlign: "center",
+            padding: "2rem",
+            margin: "1rem",
+          }}
+        >
+          <p>
+            I can’t wait to see what the future holds for us. I can't wait to
+            spend the rest of my life with you.
+          </p>
+          <FlipCountdown />
         </div>
       </section>
     </div>

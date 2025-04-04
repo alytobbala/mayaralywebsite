@@ -44,7 +44,7 @@ const ThreeJSModel = () => {
 
         // ✅ Set the initial scale and position
         gltf.scene.scale.set(0.6, 0.6, 0.6);
-        gltf.scene.position.set(0, 4.2, 0);
+        gltf.scene.position.set(0, 4, 0);
 
         // ✅ Apply Glow Effect (Emissive Material)
 
@@ -62,7 +62,7 @@ const ThreeJSModel = () => {
             onUpdate: () => {
               if (modelRef.current) {
                 const easedProgress = Math.pow(scrollProgress.value, 1.5);
-                modelRef.current.position.y = 4.2 - easedProgress * 6;
+                modelRef.current.position.y = 4 - easedProgress * 6;
                 const windFactor = Math.sin(scrollProgress.value * Math.PI * 3);
                 modelRef.current.position.x =
                   windFactor * 0.8 + easedProgress * 2;

@@ -12,6 +12,7 @@ const FlipCountdown: React.FC = () => {
     if (difference <= 0)
       return { days: "00", hours: "00", minutes: "00", seconds: "00" };
 
+    // console.log("difference: ", difference);
     return {
       days: String(Math.floor(difference / (1000 * 60 * 60 * 24))).padStart(
         2,
@@ -40,13 +41,13 @@ const FlipCountdown: React.FC = () => {
 
   return (
     <div className="countdown-container">
-      <h2>Countdown to Our Wedding 💍</h2>
+      <h3>Countdown to Our Wedding 💍</h3>
       <div className="countdown">
         {Object.entries(timeLeft).map(([label, value]) => (
           <div key={label} className="time-box">
             <Flipper flipKey={value}>
               <Flipped flipId={label}>
-                <div className="flip-card">
+                <div className="flip-card2">
                   <span>{value}</span>
                 </div>
               </Flipped>
