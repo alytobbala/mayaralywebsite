@@ -36,7 +36,7 @@ const ThreeJSModel = () => {
     // ✅ Load 3D Model
     const loader = new GLTFLoader();
     loader.load(
-      "../public/images/sunflower.glb",
+      "/images/sunflower.glb",
       (gltf) => {
         console.log("✅ Model loaded successfully", gltf);
         modelRef.current = gltf.scene;

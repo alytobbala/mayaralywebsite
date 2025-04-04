@@ -3,17 +3,17 @@ import { gsap } from "gsap";
 import "./PhotoTimeline.css";
 
 const images = [
-  "../public/images/austria/1.jpg",
-  "../public/images/austria/2.jpg",
-  "../public/images/austria/3.jpg",
-  "../public/images/austria/4.jpg",
-  "../public/images/austria/5.jpg",
-  "../public/images/austria/6.jpg",
-  "../public/images/austria/7.jpg",
-  "../public/images/austria/8.jpg",
-  "../public/images/austria/9.jpg",
-  "../public/images/austria/10.jpg",
-  "../public/images/austria/11.jpg",
+  "/images/austria/1.jpg",
+  "/images/austria/2.jpg",
+  "/images/austria/3.jpg",
+  "/images/austria/4.jpg",
+  "/images/austria/5.jpg",
+  "/images/austria/6.jpg",
+  "/images/austria/7.jpg",
+  "/images/austria/8.jpg",
+  "/images/austria/9.jpg",
+  "/images/austria/10.jpg",
+  "/images/austria/11.jpg",
 ];
 
 const PhotoTimeline = () => {

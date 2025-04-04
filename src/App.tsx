@@ -161,10 +161,7 @@ function App() {
       <CursorEffect />
       <div className="containerVideo">
         <video id="boomerangVideo" autoPlay loop muted>
-          <source
-            src="../public/images/austria/editedDance.mp4"
-            type="video/mp4"
-          />
+          <source src="/images/austria/editedDance.mp4" type="video/mp4" />
         </video>
         <div className="maskWord">
           <h2 style={{ textAlign: "center" }}>
@@ -178,32 +175,16 @@ function App() {
           <br />
           <h1 style={{ color: "black" }}> From your biggest fan</h1>
           <div className="masonry">
-            <img src="../public/images/work/prints.png" alt="4" />
+            <img src="/images/work/prints.png" alt="4" />
             <img
-              src="../public/images/work/abgad.png"
+              src="/images/work/abgad.png"
               style={{ height: "100.5%" }}
               alt="1"
             />
-            <img
-              src="../public/images/work/downtownAlex.gif"
-              className="wide"
-              alt="2"
-            />
-            <img
-              src="../public/images/work/ensembles.jfif"
-              alt="3"
-              className="wide"
-            />
-            <img
-              src="../public/images/work/tawagah.png"
-              alt="3"
-              className="wide"
-            />
-            <img
-              src="../public/images/work/gallery.png"
-              alt="3"
-              className="wide"
-            />
+            <img src="/images/work/downtownAlex.gif" className="wide" alt="2" />
+            <img src="/images/work/ensembles.jfif" alt="3" className="wide" />
+            <img src="/images/work/tawagah.png" alt="3" className="wide" />
+            <img src="/images/work/gallery.png" alt="3" className="wide" />
           </div>
         </section>
       </div>
@@ -216,7 +197,7 @@ function App() {
           <div className="flip-card photo1">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <img src="../public/images/withMe/6.jpg" alt="1" />
+                <img src="/images/withMe/6.jpg" alt="1" />
               </div>
               <div className="flip-card-back">
                 <p>My little Journal ❤️</p>
@@ -227,7 +208,7 @@ function App() {
           <div className="flip-card photo2">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <img src="../public/images/withMe/1.jpg" alt="2" />
+                <img src="/images/withMe/1.jpg" alt="2" />
               </div>
               <div className="flip-card-back">
                 <p>انت عالمي 😊</p>
@@ -238,7 +219,7 @@ function App() {
           <div className="flip-card photo3">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <img src="../public/images/withMe/3.jpg" alt="3" />
+                <img src="/images/withMe/3.jpg" alt="3" />
               </div>
               <div className="flip-card-back">
                 <p>
@@ -252,7 +233,7 @@ function App() {
           <div className="flip-card photo4">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <img src="../public/images/withMe/5.jpg" alt="5" />
+                <img src="/images/withMe/5.jpg" alt="5" />
               </div>
               <div className="flip-card-back">
                 <p>بارك الله لنا و بارك علينا و جمع بيننا في خير</p>
@@ -263,7 +244,7 @@ function App() {
           <div className="flip-card photo5">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <img src="../public/images/withMe/8.jpg" alt="6" />
+                <img src="/images/withMe/8.jpg" alt="6" />
               </div>
               <div className="flip-card-back">
                 <p>My first surprise with how much you know me</p>
@@ -274,7 +255,7 @@ function App() {
           <div className="flip-card photo6">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <img src="../public/images/withMe/9.jpg" alt="7" />
+                <img src="/images/withMe/9.jpg" alt="7" />
               </div>
               <div className="flip-card-back">
                 <p>My favourite TOTEEEEE bag</p>
@@ -285,7 +266,7 @@ function App() {
           <div className="flip-card photo7">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <img src="../public/images/withMe/4.jpg" alt="4" />
+                <img src="/images/withMe/4.jpg" alt="4" />
               </div>
               <div className="flip-card-back">
                 <p>One of our first dates</p>
@@ -296,7 +277,7 @@ function App() {
           <div className="flip-card photo8">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <img src="../public/images/withMe/10.jpg" alt="10" />
+                <img src="/images/withMe/10.jpg" alt="10" />
               </div>
               <div className="flip-card-back">
                 <p>Love my blanket</p>
@@ -307,7 +288,7 @@ function App() {
           <div className="flip-card photo9">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <img src="../public/images/withMe/11.jpg" alt="11" />
+                <img src="/images/withMe/11.jpg" alt="11" />
               </div>
               <div className="flip-card-back">
                 <p>
