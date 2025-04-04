@@ -1,219 +1,404 @@
-#root {
-  width: 85vw;
-  height:100vh;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-  background-color: black;
-  overflow-x:hidden;
+/* App.css */
+*{
+  color:black;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-.App {
-  font-family: Arial, sans-serif;
-  opacity: 0;
-  transition: opacity 5s ease-in-out;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  overflow-x: hidden; /* Hide horizontal overflow */
-  width: 100%;
-  height: 100%;
-  
-}
-
-.header {
-  text-align: center;
-  background-color: #f2f2f2;
-  padding: 50px 0;
-}
-
-.header h1 {
-  font-size: 36px;
-  color: black !important; /* Force black color for header text */
-}
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #fff;
-  }
-  
-  /* Force header text color to black */
-  .header h1 {
-    color: black;
-  }
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #213547;
-    background-color: black;
-  }
-  
-  /* Force header text color to black */
-  .header h1 {
-    color: black;
-  }
-}
-.how-it-started {
+.containerVideo {
+  min-height: 120vh;
   position: relative;
-  height: 1200px;
-  background-image: url('../public/images/whereItStarted.png'); /* Replace with your image path */
+  overflow: hidden;
+  z-index: 1;
+}
+
+.maskWord {
+  height: 100vh;
+  width: 100vw;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  mix-blend-mode: screen;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0;
+}
+
+h2 {
+  font-size: 80px;
+  transform-origin: center;
+  transition: transform 0.1s linear;
+  will-change: transform;
+}
+
+video {
+  position: fixed;
+  z-index: 0;
+  inset: 0;
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
+  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+  will-change: transform, opacity;
+  scale:2;
+}
+
+.textSection {
+  display: flex;
+  flex-direction: column; /* Force sections to stack vertically */
+  align-items: center;
+  justify-content: flex-start; /* Align content at the top */
+  width: 100%;
+}
+
+.outro{
+  padding:0px;
+  color: black;
+  background: rgba(255, 255, 255, 0.9); /* Add slight background to be visible */
+}
+
+
+.scanner{
+  position:absolute
+}
+
+.hero, .info {
+  position: relative;
+  width: 100%;
+  min-height: 500px; /* Adjust height as needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white; /* Ensure text is readable */
   background-size: cover;
   background-position: center;
-  color: white;
-  text-align: center;
+  background-repeat: no-repeat;
+  z-index: 4;
 }
 
-.how-it-started .overlay {
+/* Dark overlay */
+.hero::before {
+  content: "";
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* Ensure text stays on top */
+.hero h1,
+.hero p {
+  position: relative;
+  z-index: 2;
+}
+
+.backgroundTwo {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for better text visibility */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  object-fit: cover; /* Ensures the image covers the entire section */
+  z-index: -1; /* Sends it behind the text */
 }
 
-.how-it-started h2 {
-  font-size: 48px;
-  margin-bottom: 20px;
-}
 
-.how-it-started p {
-  font-size: 24px;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.wedding-vows {
-  padding: 50px 20px;
-  background-color: #f9f9f9;
-  text-align: center;
-}
-
-.wedding-vows h2 {
-  font-size: 36px;
-  margin-bottom: 20px;
-}
-
-.wedding-vows p {
-  font-size: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-  line-height: 1.5;
-}
-
-.password-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.backgroundTwo{
+  position: relative;
+  z-index: 0;
+  inset: 0;
   height: 100vh;
-  width: 100%; /* Adjust width for better responsiveness on mobile */
-  max-width: 1000px; /* Set a maximum width so it's not too wide on larger screens */
-  background-color: #f4f4f4;
-  margin: 0 auto; /* Center the container horizontally */
-  padding: 2rem; /* Add some padding for spacing */
-  box-sizing: border-box; /* Ensure padding doesn't affect width calculations */
-}
-.lock-icon {
-  font-size: 50px;
-  color: #ff5e78;
-  transition: transform 0.5s ease, opacity 0.5s ease;
-}
-.unlock {
-  transform: rotateY(180deg);
-  opacity: 0.7;
+  width: 100vw;
+  object-fit: cover;
+  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+  will-change: transform, opacity;
+  scale:1;
 }
 
-.password-container h2 {
-  margin: 20px 0;
-  font-size: 24px; /* Adjust font size for better readability on mobile */
-
+.model {
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  background: #fefdfd;
 }
 
-.password-container input {
-  padding: 10px;
-  font-size: 16px;
-  margin-right: 10px;
-  width: 100%; /* Make the input take up the full width */
-  max-width: 300px; /* Set a max-width to prevent it from getting too large */
-  margin-bottom: 20px; /* Add space between the input and button */
-}
-.password-container button {
-  padding: 10px 15px;
-  background-color: #ff5e78;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  width: 100%; /* Make the button take up the full width */
-  max-width: 300px; /* Set a max-width to prevent it from getting too large */
-}
-.password-container button:hover {
-  background-color: #e14b63;
+.model {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+  background: #fefdfd;
+  z-index: 1;
 }
 
-.App.fade-in {
+
+section { 
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  z-index: 2;
+}
+
+.threejs-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+  position: fixed;
+  z-index:3;
+}
+canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+.gradient-bg {
+  padding: 20px;
+  border-radius: 24px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(90deg, #808000, #CB4154);
+  animation: morph 6s infinite alternate ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes morph {
+  0% {
+    clip-path: circle(30% at 30% 30%);
+  }
+  50% {
+    clip-path: circle(50% at 70% 60%);
+  }
+  100% {
+    clip-path: circle(60% at 30% 30%);
+  }
+}
+.masonry {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  max-width: 600px;
+  margin-top: 20px;
+  z-index: 4;
+}
+
+.masonry img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
+}
+
+.masonry .tall {
+  grid-row: span 2;
+}
+
+.masonry .wide {
+  grid-column: span 2;
+}
+
+.masonry img:hover {
+  transform: scale(1.05);
+}
+
+.timeLine{
+  display: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: black;
+  z-index: 1;
+}
+.phototime{
+  width: 100vw;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
+}
+.phototimeparent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 30px;
+  margin-top: 40px;
+  z-index: 5;
+}
+
+.masonryTwo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  max-width: 600px;
+  margin-top: 20px;
+  z-index: 3;
+}
+
+.masonryTwo img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
+}
+
+.masonryTwo .tall {
+  grid-row: span 2;
+}
+
+.masonryTwo .wide {
+  grid-column: span 2;
+}
+
+.masonryTwo img:hover {
+  transform: scale(1.05);
+}
+.wind-effect {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255, 0, 0, 0.5) 10%, rgba(255,255,255,0) 80%);
   opacity: 1;
+  filter: blur(8px);
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  animation: swirl 3s linear infinite;
+  color:"red";
+  z-index: 1;
 }
-/* Add media query for smaller screens (phones and tablets) */
-@media (max-width: 600px) {
-  .password-container {
-    width: 100vw; /* Ensure it takes up most of the screen on smaller devices */
-    height: 100vh;
-  }
 
-  .lock-icon {
-    font-size: 40px; /* Smaller icon for mobile */
-  }
-
-  .password-container h2 {
-    font-size: 20px; /* Smaller text for mobile */
-  }
-
-  .password-container input,
-  .password-container button {
-    font-size: 14px; /* Smaller text size for input and button */
-  }
+@keyframes swirl {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
 }
+.photo-stack-gallery {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  padding: 20px;
+}
+
+.photo-stack {
+  position: relative;
+  width: 90%;
+  max-width: 800px;
+  height: 80vh;
+}
+
+/* 🔹 Flip Card Container */
+.flip-card {
+  position: absolute;
+  width: 200px;
+  height: 250px;
+  perspective: 1000px; /* Creates 3D depth */
+}
+
+/* 🔹 Inner Card with Flipping Animation */
+.flip-card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.7s;
+}
+
+/* 🔹 Flip on Hover */
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+/* 🔹 Front & Back Styles */
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  backface-visibility: hidden; /* Hides the back by default */
+}
+
+/* 🔹 Front (Photo) */
+.flip-card-front {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flip-card-front img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 5px 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* 🔹 Back (Text) */
+.flip-card-back {
+  background: white;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: rotateY(180deg);
+  box-shadow: 5px 10px 30px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  padding: 15px;
+  font-size: 14px;
+  font-family: 'Courier New', Courier, monospace;
+  border-radius: 10px;
+}
+
+/* 🔹 Desktop Positions (Scattered Randomly) */
+@media (min-width: 768px) {
+  .photo1 { top: 10%; left: 8%; transform: rotate(-10deg); z-index: 2; }
+  .photo2 { top: 20%; left: 40%; transform: rotate(5deg); z-index: 2; }
+  .photo3 { top: 40%; left: 30%; transform: rotate(-15deg); z-index: 2; }
+  .photo4 { top: 60%; left: 10%; transform: rotate(7deg); z-index: 2; }
+  .photo5 { top: 70%; left: 60%; transform: rotate(-8deg); z-index: 2; }
+  .photo6 { top: 50%; left: 75%; transform: rotate(10deg); z-index: 2; }
+  .photo7 { top: 50%; left: 45%; transform: rotate(-5deg); z-index: 2; }
+  .photo8 { top: 80%; left: 35%; transform: rotate(12deg); z-index: 2; }
+  .photo9 { top: 10%; left: 65%; transform: rotate(-20deg); z-index: 1; }
+}
+
+/* 🔹 Mobile Optimization: Keep Scattered Look */
+@media (max-width: 767px) {
+  .flip-card {
+    width: 140px; /* Smaller images for mobile */
+    height: 180px;
+  }
+
+  .photo1 { top: 5%; left: 15%; transform: rotate(-7deg); z-index: 1; }
+  .photo2 { top: 5%; left: 70%; transform: rotate(6deg); z-index: 2; }
+  .photo3 { top: 25%; left: 0%; transform: rotate(-12deg); z-index: 5; }
+  .photo4 { top: 50%; left: 0%; transform: rotate(4deg); z-index: 6; }
+  .photo5 { top: 75%; left: 55%; transform: rotate(-6deg); z-index: 5; }
+  .photo6 { top: 45%; left: 75%; transform: rotate(9deg); z-index: 6; }
+  .photo7 { top: 50%; left: 38%; transform: rotate(-5deg); z-index: 7; }
+  .photo8 { top: 75%; left: 2%; transform: rotate(11deg); z-index: 8; }
+  .photo9 { top: 25%; left: 45%; transform: rotate(-25deg); z-index: 4; }
+}
+

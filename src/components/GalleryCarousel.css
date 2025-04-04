@@ -1,6 +1,7 @@
 /* GalleryCarousel.css */
 
 .gallery-carousel {
+  height: 100vh;
     padding: 50px 20px;
     text-align: center;
     background-color: #f2f2f2;

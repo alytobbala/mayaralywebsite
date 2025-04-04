@@ -1,0 +1,31 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevent double scrollbars */
+    height: 100%;
+  }
+  
+  .scroll-container {
+    width: 100vw;
+    height: 100vh;
+    overflow-y: scroll; /* Allow natural scrolling */
+    scroll-snap-type: y mandatory;
+  }
+  
+  .section {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    scroll-snap-align: start;
+    font-size: 2rem;
+    color: black;
+    background-color: #f2f2f2; /* Background for visibility */
+  }
+  
+  .section:nth-child(even) {
+    background-color: white;
+  }
+  
