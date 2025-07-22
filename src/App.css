@@ -10,6 +10,21 @@
   z-index: 1;
 }
 
+.videoTwo{
+  z-index: 0;
+  inset: 0;
+  height: 100vh;
+  width: 100vw;
+  object-fit: cover;
+  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
+  will-change: transform, opacity;
+  position: "relative";
+                z-index: 100;
+                opacity: 1;
+                transform: ""; 
+
+}
+
 .maskWord {
   height: 100vh;
   width: 100vw;
@@ -137,7 +152,6 @@ video {
 section { 
   position: relative;
   width: 100vw;
-  height: 100vh;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -402,3 +416,68 @@ canvas {
   .photo9 { top: 25%; left: 45%; transform: rotate(-25deg); z-index: 4; }
 }
 
+/* Night Mode Background */
+.night-mode {
+  background-color: #000 !important;
+  color: #fff;
+  transition: background-color 2s ease, color 2s ease;
+}
+
+/* Starry Overlay */
+
+
+@keyframes starry {
+  0% {
+    background-image: radial-gradient(white 1px, transparent 1px);
+    background-size: 3px 3px;
+  }
+  100% {
+    background-position: 0 1px;
+  }
+}
+
+
+.falling-star {
+  position: fixed;
+  top: -20px;
+  width: 10px;
+  height: 10px;
+  background: radial-gradient(circle, #ffd700 0%, #ffae00 40%, transparent 70%);
+  border-radius: 50%;
+  box-shadow: 0 0 10px #ffd700, 0 0 20px #ffae00;
+  animation: fall linear forwards;
+  z-index: 999;
+  opacity: 0.8;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+
+.moon {
+  position: fixed;
+  top: 0%;
+  right: 2%;
+  width: 100px;
+  opacity: 0.8;
+  filter: drop-shadow(0 0 15px #fddc8f);
+  animation: floatMoon 5s ease-in-out infinite;
+  z-index: 50;
+}
+
+@keyframes floatMoon {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}

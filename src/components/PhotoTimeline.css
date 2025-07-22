@@ -24,6 +24,15 @@
     object-fit: cover;
     transition: transform 0.3s ease-in-out;
   }
+
+    .photo-timeline video {
+    width: 250px; /* Adjust size */
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+  }
+  
   
   .photo-timeline img:hover {
     transform: scale(1.1);

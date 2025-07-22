@@ -14,6 +14,11 @@ const images = [
   "/images/austria/9.jpg",
   "/images/austria/10.jpg",
   "/images/austria/11.jpg",
+  "/images/new/1.jpg",
+  "/images/new/2.jfif",
+  "/images/new/3.jfif",
+  "/images/new/4.jfif",
+  "/images/new/5.jfif",
 ];
 
 const PhotoTimeline = () => {
@@ -37,9 +42,14 @@ const PhotoTimeline = () => {
   return (
     <div className="photo-timeline-container">
       <div className="photo-timeline" ref={timelineRef}>
-        {[...images, ...images].map((src, index) => (
-          <img key={index} src={src} alt={`Memory ${index + 1}`} />
-        ))}
+        {[...images, ...images].map((src, index) => {
+          const isVideo = src.endsWith(".mp4");
+          return isVideo ? (
+            <video key={index} src={src} autoPlay loop muted playsInline />
+          ) : (
+            <img key={index} src={src} alt={`Memory ${index + 1}`} />
+          );
+        })}
       </div>
     </div>
   );
