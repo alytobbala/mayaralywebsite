@@ -16,6 +16,7 @@ import FirstMeetMap from "./components/FirstMeetMap";
 import FakeChat from "./components/FakeChat";
 import FakeChatTwo from "./components/FakeChatTwo";
 import FakeChatSlider from "./components/FakeChatSlider";
+import LoadingScreen from "./components/LoadingScreen";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -34,13 +35,15 @@ function App() {
   const [audioAllowed, setAudioAllowed] = useState(false);
   const [isNightMode, setIsNightMode] = useState(false);
   const [hasPlayed, setHasPlayed] = useState(false); // Prevent retriggering
-  const [autoScrollStarted, setAutoScrollStarted] = useState(false);
   const [scrollSpeed, setScrollSpeed] = useState<any>();
   const scrollIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [isAppLoaded, setIsAppLoaded] = useState(false);
+  const [preloadedUrls, setPreloadedUrls] = useState<string[]>([]);
+
   const scrollYRef = useRef(0);
   const lastScrollTop = useRef(0);
   const lastTimestamp = useRef(performance.now());
-
+  let inVideoTwo = false;
   const songList = [
     {
       url: "https://archive.org/download/grover-washington-jr.-feat.-bill-withers-just-the-two-of-us-hq_202202/Grover%20Washington%20Jr.%20feat.%20Bill%20Withers%20-%20Just%20The%20Two%20of%20Us%20%5BHQ%5D.mp3",
@@ -58,6 +61,47 @@ function App() {
       duration: 1000000,
     },
   ];
+
+  useEffect(() => {
+    const waitForAssets = async () => {
+      const images = Array.from(document.querySelectorAll("img"));
+      const media = Array.from(document.querySelectorAll("video, audio"));
+
+      const imgPromises = images.map((img) => {
+        if (img.complete) return Promise.resolve();
+        return new Promise<void>((resolve: any) => {
+          img.addEventListener("load", resolve, { once: true });
+          img.addEventListener("error", resolve, { once: true });
+        });
+      });
+
+      const mediaPromises = media.map((el) => {
+        if (
+          (el as HTMLMediaElement).readyState >= 3 &&
+          (el as HTMLMediaElement).currentSrc
+        ) {
+          return Promise.resolve();
+        }
+        return new Promise<void>((resolve) => {
+          el.addEventListener("canplay", () => resolve(), { once: true }); // enough to render first frame
+          el.addEventListener("playing", () => resolve(), { once: true }); // safe fallback
+          el.addEventListener("error", () => resolve(), { once: true });
+        });
+      });
+
+      // Optional: safety timeout in case something hangs
+      const timeout = new Promise<void>((resolve) => setTimeout(resolve, 8000));
+
+      await Promise.race([
+        Promise.allSettled([...imgPromises, ...mediaPromises]),
+        timeout,
+      ]);
+
+      setIsAppLoaded(true);
+    };
+
+    waitForAssets();
+  }, []);
 
   const startPlayback = () => {
     if (isTransitioning.current) return;
@@ -220,10 +264,11 @@ function App() {
     if (triggerElement) {
       ScrollTrigger.create({
         trigger: triggerElement,
-        start: "bottom bottom",
+        start: "center center",
         once: true,
         onEnter: () => {
-          console.log("Video is fully in view – pausing scroll");
+          inVideoTwo = true;
+          console.log("Video is in view – pausing scroll");
 
           // Pause Lenis and auto-scroll
           lenis.stop();
@@ -238,8 +283,10 @@ function App() {
             document.body.style.overflow = "";
             console.log("Resumed scrolling after 2 minutes");
 
-            // ✅ Restart auto scroll
-            startAutoScroll();
+            // Delay auto scroll by 300ms to let browser breathe
+            setTimeout(() => {
+              startAutoScroll();
+            }, 300);
           }, 95000);
         },
       });
@@ -309,8 +356,10 @@ function App() {
   }, [audioAllowed, hasPlayed]);
 
   const startAutoScroll = () => {
-    if (autoScrollStarted) return;
-    setAutoScrollStarted(true);
+    if (scrollIntervalRef.current) {
+      clearInterval(scrollIntervalRef.current);
+      scrollIntervalRef.current = null;
+    }
 
     const scrollLoop = () => {
       const now = performance.now();
@@ -357,7 +406,6 @@ function App() {
 
   useEffect(() => {
     const handleFirstInteraction = () => {
-      setAutoScrollStarted(true);
       startAutoScroll();
       window.removeEventListener("touchstart", handleFirstInteraction);
       window.removeEventListener("click", handleFirstInteraction);
@@ -378,274 +426,298 @@ function App() {
   }, []);
 
   return (
-    <div className={isNightMode ? "night-mode" : ""} data-scroll-speed="0.7">
-      {isNightMode && <img src="/images/moon.png" className="moon" />}
-      {/* 🎵 Two crossfading audio elements */}
-      <audio ref={audioRefA} />
-      <audio ref={audioRefB} />
-      {/* 📣 Audio Fallback */}
-      {!audioAllowed && (
-        <button
-          onClick={() => {
-            setAudioAllowed(true);
-            songIndexRef.current = 0;
-          }}
-          style={{ position: "fixed", top: 20, right: 20, zIndex: 1000 }}
+    <>
+      {!isAppLoaded && <LoadingScreen />}
+      {isAppLoaded && (
+        <div
+          className={isNightMode ? "night-mode" : ""}
+          data-scroll-speed="0.7"
         >
-          🔊 Enable Audio
-        </button>
-      )}
-      <ThreeJSModel /> {/* This will display the 3D model */}
-      <CursorEffect />
-      <div className="containerVideo" data-scroll-speed="0.7">
-        <video id="boomerangVideo" autoPlay loop muted>
-          <source src="/images/austria/editedDance.mp4" type="video/mp4" />
-        </video>
-        <div className="maskWord" data-scroll-speed="0.7">
-          <h2 style={{ textAlign: "center" }}>
-            To my One and Only, the girl I love the most
-          </h2>
-        </div>
-      </div>
-      <div className="textSection" data-scroll-speed="2">
-        <section
-          style={{ height: "300vh" }}
-          className="hero"
-          data-scroll-speed="0.8"
-        >
-          {" "}
-          <br />
-          <h1 style={{ color: "black" }}> From your biggest fan</h1>
-          <div className="masonry">
-            <img src="/images/work/prints.png" alt="4" />
-            <img
-              src="/images/work/abgad.png"
-              style={{ height: "100.5%" }}
-              alt="1"
-            />
-            <img src="/images/work/downtownAlex.gif" className="wide" alt="2" />
-            <img src="/images/work/ensembles.jfif" alt="3" className="wide" />
-            <img src="/images/work/tawagah.png" alt="3" className="wide" />
-            <img src="/images/work/gallery.png" alt="3" className="wide" />
-          </div>
-        </section>
-      </div>
-      <section style={{ height: "100vh" }} className="info">
-        {" "}
-        <h1 style={{ color: "black", width: "90%" }}>
-          Maybe, you arent here yet, but I have you around me all the time
-        </h1>
-        <div className="photo-stack" data-scroll-speed="1.5">
-          <div className="flip-card photo1">
-            <div className="flip-card-inner">
-              <div className="flip-card-front">
-                <img src="/images/withMe/6.jpg" alt="1" />
-              </div>
-              <div className="flip-card-back">
-                <p>My little Journal ❤️</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flip-card photo2">
-            <div className="flip-card-inner">
-              <div className="flip-card-front">
-                <img src="/images/withMe/1.jpg" alt="2" />
-              </div>
-              <div className="flip-card-back">
-                <p>انت عالمي 😊</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flip-card photo3">
-            <div className="flip-card-inner">
-              <div className="flip-card-front">
-                <img src="/images/withMe/3.jpg" alt="3" />
-              </div>
-              <div className="flip-card-back">
-                <p>
-                  إذا شققت صدري, ستجد قلبي, وإذا شققت قلبي ستجد بابا, افتح الباب
-                  ستجد كرسيا و علي الكرسي تجلس انت , هناك يقع الحب{" "}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flip-card photo4">
-            <div className="flip-card-inner">
-              <div className="flip-card-front">
-                <img src="/images/withMe/5.jpg" alt="5" />
-              </div>
-              <div className="flip-card-back">
-                <p>بارك الله لنا و بارك علينا و جمع بيننا في خير</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flip-card photo5">
-            <div className="flip-card-inner">
-              <div className="flip-card-front">
-                <img src="/images/withMe/8.jpg" alt="6" />
-              </div>
-              <div className="flip-card-back">
-                <p>My first surprise with how much you know me</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flip-card photo6">
-            <div className="flip-card-inner">
-              <div className="flip-card-front">
-                <img src="/images/withMe/9.jpg" alt="7" />
-              </div>
-              <div className="flip-card-back">
-                <p>My favourite TOTEEEEE bag</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flip-card photo7">
-            <div className="flip-card-inner">
-              <div className="flip-card-front">
-                <img src="/images/withMe/4.jpg" alt="4" />
-              </div>
-              <div className="flip-card-back">
-                <p>One of our first dates</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flip-card photo8">
-            <div className="flip-card-inner">
-              <div className="flip-card-front">
-                <img src="/images/withMe/10.jpg" alt="10" />
-              </div>
-              <div className="flip-card-back">
-                <p>Love my blanket</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="flip-card photo9">
-            <div className="flip-card-inner">
-              <div className="flip-card-front">
-                <img src="/images/withMe/11.jpg" alt="11" />
-              </div>
-              <div className="flip-card-back">
-                <p>
-                  ِAlways right there on my phone screen with our playlist
-                  running in the background ✨
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section className="scanner"></section>
-      <section className="outro"></section>
-      <section className="info" data-scroll-speed="0.5">
-        {" "}
-        <div className="tags" style={{ scale: "0.69" }} data-scroll-speed="0.9">
-          <div className="containerVideoTwo">
-            <video
-              autoPlay
-              loop
-              muted
-              style={{
-                position: "relative",
-                zIndex: 100,
-                opacity: 1.0,
-                transform: "0",
-                translate: "0",
-                scale: 0.69,
+          {isNightMode && <img src="/images/moon.png" className="moon" />}
+          {/* 🎵 Two crossfading audio elements */}
+          <audio ref={audioRefA} />
+          <audio ref={audioRefB} />
+          {/* 📣 Audio Fallback */}
+          {!audioAllowed && (
+            <button
+              onClick={() => {
+                setAudioAllowed(true);
+                songIndexRef.current = 0;
               }}
+              style={{ position: "fixed", top: 20, right: 20, zIndex: 1000 }}
             >
+              🔊 Enable Audio
+            </button>
+          )}
+          <ThreeJSModel /> {/* This will display the 3D model */}
+          <CursorEffect />
+          <div className="containerVideo" data-scroll-speed="0.7">
+            <video id="boomerangVideo" autoPlay loop muted>
               <source
-                id="videoTwo"
-                className="videoTwo"
-                src="/images/austria/WholeVideo.mp4"
+                src="https://firebasestorage.googleapis.com/v0/b/videos-3ff41.firebasestorage.app/o/editedDance.mp4?alt=media&token=01aed2e8-4b63-4d1e-82d4-149a43579976"
                 type="video/mp4"
               />
             </video>
+            <div className="maskWord" data-scroll-speed="0.7">
+              <h2 style={{ textAlign: "center" }}>
+                To my One and Only, the girl I love the most
+              </h2>
+            </div>
           </div>
+          <div className="textSection" data-scroll-speed="2">
+            <section
+              style={{ height: "300vh" }}
+              className="hero"
+              data-scroll-speed="0.8"
+            >
+              {" "}
+              <br />
+              <h1 style={{ color: "black" }}> From your biggest fan</h1>
+              <div className="masonry">
+                <img src="/images/work/prints.png" alt="4" />
+                <img
+                  src="/images/work/abgad.png"
+                  style={{ height: "100.5%" }}
+                  alt="1"
+                />
+                <img
+                  src="/images/work/downtownAlex.gif"
+                  className="wide"
+                  alt="2"
+                />
+                <img
+                  src="/images/work/ensembles.jfif"
+                  alt="3"
+                  className="wide"
+                />
+                <img src="/images/work/tawagah.png" alt="3" className="wide" />
+                <img src="/images/work/gallery.png" alt="3" className="wide" />
+              </div>
+            </section>
+          </div>
+          <section style={{ height: "100vh" }} className="info">
+            {" "}
+            <h1 style={{ color: "black", width: "90%" }}>
+              Maybe, you arent here yet, but I have you around me all the time
+            </h1>
+            <div className="photo-stack" data-scroll-speed="1.5">
+              <div className="flip-card photo1">
+                <div className="flip-card-inner">
+                  <div className="flip-card-front">
+                    <img src="/images/withMe/6.jpg" alt="1" />
+                  </div>
+                  <div className="flip-card-back">
+                    <p>My little Journal ❤️</p>
+                  </div>
+                </div>
+              </div>
 
-          <p>DAAAMNN</p>
+              <div className="flip-card photo2">
+                <div className="flip-card-inner">
+                  <div className="flip-card-front">
+                    <img src="/images/withMe/1.jpg" alt="2" />
+                  </div>
+                  <div className="flip-card-back">
+                    <p>انت عالمي 😊</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flip-card photo3">
+                <div className="flip-card-inner">
+                  <div className="flip-card-front">
+                    <img src="/images/withMe/3.jpg" alt="3" />
+                  </div>
+                  <div className="flip-card-back">
+                    <p>
+                      إذا شققت صدري, ستجد قلبي, وإذا شققت قلبي ستجد بابا, افتح
+                      الباب ستجد كرسيا و علي الكرسي تجلس انت , هناك يقع الحب{" "}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flip-card photo4">
+                <div className="flip-card-inner">
+                  <div className="flip-card-front">
+                    <img src="/images/withMe/5.jpg" alt="5" />
+                  </div>
+                  <div className="flip-card-back">
+                    <p>بارك الله لنا و بارك علينا و جمع بيننا في خير</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flip-card photo5">
+                <div className="flip-card-inner">
+                  <div className="flip-card-front">
+                    <img src="/images/withMe/8.jpg" alt="6" />
+                  </div>
+                  <div className="flip-card-back">
+                    <p>My first surprise with how much you know me</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flip-card photo6">
+                <div className="flip-card-inner">
+                  <div className="flip-card-front">
+                    <img src="/images/withMe/9.jpg" alt="7" />
+                  </div>
+                  <div className="flip-card-back">
+                    <p>My favourite TOTEEEEE bag</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flip-card photo7">
+                <div className="flip-card-inner">
+                  <div className="flip-card-front">
+                    <img src="/images/withMe/4.jpg" alt="4" />
+                  </div>
+                  <div className="flip-card-back">
+                    <p>One of our first dates</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flip-card photo8">
+                <div className="flip-card-inner">
+                  <div className="flip-card-front">
+                    <img src="/images/withMe/10.jpg" alt="10" />
+                  </div>
+                  <div className="flip-card-back">
+                    <p>Love my blanket</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flip-card photo9">
+                <div className="flip-card-inner">
+                  <div className="flip-card-front">
+                    <img src="/images/withMe/11.jpg" alt="11" />
+                  </div>
+                  <div className="flip-card-back">
+                    <p>
+                      ِAlways right there on my phone screen with our playlist
+                      running in the background ✨
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section className="scanner"></section>
+          <section className="outro"></section>
+          <section className="info" data-scroll-speed="0.5">
+            {" "}
+            <div
+              className="tags"
+              style={{ scale: "0.69" }}
+              data-scroll-speed="0.9"
+            >
+              <div className="containerVideoTwo">
+                <video
+                  autoPlay
+                  loop
+                  muted
+                  style={{
+                    position: "relative",
+                    zIndex: 100,
+                    opacity: 1.0,
+                    transform: "0",
+                    translate: "0",
+                    scale: 0.69,
+                  }}
+                >
+                  <source
+                    id="videoTwo"
+                    className="videoTwo"
+                    src="https://firebasestorage.googleapis.com/v0/b/videos-3ff41.firebasestorage.app/o/Wholevideo.mp4?alt=media&token=c7b70fb2-381a-40e3-a1fd-13cba9e17927"
+                    type="video/mp4"
+                  />
+                </video>
+              </div>
+
+              <p>DAAAMNN</p>
+            </div>
+            {/* Timeline Section - Fixes Placement */}
+            <div className="phototimeparent" data-scroll-speed="0.7">
+              <h1 style={{ color: "white" }}>We went from this</h1>
+              <div className="phototime">
+                <PhotoTimelineTwo></PhotoTimelineTwo>
+              </div>
+              <h1 style={{ color: "white" }}>To this</h1>
+              <div className="phototime">
+                <PhotoTimeline></PhotoTimeline>
+              </div>
+            </div>
+            <div data-scroll-speed="2">
+              <span style={{ fontSize: "36px", color: "white" }}>
+                Some snippets of our conversations
+              </span>
+              <div>
+                <FakeChatSlider />
+              </div>
+            </div>
+          </section>
+          <section className="mapReveal" style={{}} data-scroll-speed="0.5">
+            <FirstMeetMap />
+            <div
+              style={{
+                position: "absolute",
+                bottom: "5%",
+                left: "50%",
+                transform: "translateX(-50%)",
+                background: "rgba(255,255,255,0.8)",
+                padding: "1.5rem",
+                borderRadius: "15px",
+                width: "85%",
+                boxShadow: "0px 0px 10px rgba(0,0,0,0.1)",
+                maxHeight: "30vh",
+                overflowY: "auto",
+              }}
+              data-scroll-speed="1"
+            >
+              <p
+                style={{
+                  fontSize: "1.2rem",
+                  color: "#222",
+                  textAlign: "center",
+                  fontStyle: "italic",
+                }}
+              >
+                I’ll never forget the way you looked at me when I told you I see
+                a future with you. The surge of different feelings that showed
+                on your face. It turns out, that decision, on that day, was
+                probably the best decision I’ve ever made. I can’t imagine my
+                life without you. You are my everything, and I am so grateful
+                for every moment we share. I love you more than words can
+                express.
+              </p>
+            </div>
+          </section>
+          <section data-scroll-speed="0.5">
+            <div
+              style={{
+                backgroundColor: "#FFFFFF80",
+                borderRadius: "20px",
+                textAlign: "center",
+                padding: "2rem",
+                margin: "1rem",
+              }}
+              data-scroll-speed="1"
+            >
+              <p>
+                I can’t wait to see what the future holds for us. I can't wait
+                to spend the rest of my life with you.
+              </p>
+              <FlipCountdown />
+            </div>
+          </section>
         </div>
-        {/* Timeline Section - Fixes Placement */}
-        <div className="phototimeparent" data-scroll-speed="0.7">
-          <h1>We went from this</h1>
-          <div className="phototime">
-            <PhotoTimelineTwo></PhotoTimelineTwo>
-          </div>
-          <h1>To this</h1>
-          <div className="phototime">
-            <PhotoTimeline></PhotoTimeline>
-          </div>
-        </div>
-        <div data-scroll-speed="2">
-          <span style={{ fontSize: "36px" }}>
-            Some snippets of our conversations
-          </span>
-          <div>
-            <FakeChatSlider />
-          </div>
-        </div>
-      </section>
-      <section className="mapReveal" style={{}} data-scroll-speed="0.5">
-        <FirstMeetMap />
-        <div
-          style={{
-            position: "absolute",
-            bottom: "5%",
-            left: "50%",
-            transform: "translateX(-50%)",
-            background: "rgba(255,255,255,0.8)",
-            padding: "1.5rem",
-            borderRadius: "15px",
-            width: "85%",
-            boxShadow: "0px 0px 10px rgba(0,0,0,0.1)",
-            maxHeight: "30vh",
-            overflowY: "auto",
-          }}
-          data-scroll-speed="1"
-        >
-          <p
-            style={{
-              fontSize: "1.2rem",
-              color: "#222",
-              textAlign: "center",
-              fontStyle: "italic",
-            }}
-          >
-            I’ll never forget the way you looked at me when I told you I see a
-            future with you. The surge of different feelings that showed on your
-            face. It turns out, that decision, on that day, was probably the
-            best decision I’ve ever made. I can’t imagine my life without you.
-            You are my everything, and I am so grateful for every moment we
-            share. I love you more than words can express.
-          </p>
-        </div>
-      </section>
-      <section data-scroll-speed="0.5">
-        <div
-          style={{
-            backgroundColor: "#FFFFFF80",
-            borderRadius: "20px",
-            textAlign: "center",
-            padding: "2rem",
-            margin: "1rem",
-          }}
-          data-scroll-speed="1"
-        >
-          <p>
-            I can’t wait to see what the future holds for us. I can't wait to
-            spend the rest of my life with you.
-          </p>
-          <FlipCountdown />
-        </div>
-      </section>
-    </div>
+      )}
+    </>
   );
 }
 
