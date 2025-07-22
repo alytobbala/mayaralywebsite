@@ -10,6 +10,7 @@ const messages = [
     type: "text",
   },
   {
+  --
     from: "them",
     text: "eh akhbarak fl ghorba?",
     delay: 1500,
