@@ -452,7 +452,7 @@ function App() {
           <ThreeJSModel /> {/* This will display the 3D model */}
           <CursorEffect />
           <div className="containerVideo" data-scroll-speed="0.7">
-            <video id="boomerangVideo" autoPlay loop muted>
+            <video id="boomerangVideo" autoPlay loop muted playsInline>
               <source
                 src="https://firebasestorage.googleapis.com/v0/b/videos-3ff41.firebasestorage.app/o/editedDance.mp4?alt=media&token=01aed2e8-4b63-4d1e-82d4-149a43579976"
                 type="video/mp4"
@@ -621,6 +621,7 @@ function App() {
                   autoPlay
                   loop
                   muted
+                  playsInline
                   style={{
                     position: "relative",
                     zIndex: 100,
